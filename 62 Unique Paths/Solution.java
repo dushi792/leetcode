@@ -31,6 +31,6 @@ public class Solution {
             }
         }
         
-        return res[n-1]
+        return res[n-1];
     }
 }
