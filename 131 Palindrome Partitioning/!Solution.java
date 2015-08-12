@@ -10,7 +10,7 @@ public class Solution {
     public void helper(String s, int index) {
         //Discuss answer: if(currLst.size()>0 //the initial str could be palindrome
         if (index >= s.length()) {
-            List<String> temp = (ArrayList<String>) cur.clone();
+            List<String> temp = new ArrayList<String>(cur);
             res.add(temp);
         }
         for(int i = index; i < s.length(); i++) {
