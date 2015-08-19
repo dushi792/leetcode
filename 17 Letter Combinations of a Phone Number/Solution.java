@@ -1,3 +1,4 @@
+// Better Solution should be reviewed: https://leetcode.com/discuss/24431/my-java-solution-with-fifo-queue
 public class Solution {
     public List<String> letterCombinations(String digits) {
         List<String> res = new LinkedList<String>();
