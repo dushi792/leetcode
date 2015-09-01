@@ -21,6 +21,7 @@ public class Solution2 {
             }
             root = stack.pop();
             result.add(root.val);
+            // 注意指向位置
             root = root.right;
         }
         return result;
