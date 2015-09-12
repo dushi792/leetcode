@@ -1,4 +1,33 @@
 public class Solution {
+    public static ListNode deleteDuplicates(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        head = dummy;
+
+        while (head.next != null && head.next.next != null) {
+            if (head.next.val == head.next.next.val) {
+                int value = head.next.val;
+                // while循环不要漏了head.next != null
+                while (head.next != null && head.next.val == value) {
+                    head.next = head.next.next;
+                }
+            }
+            else {
+                head = head.next;
+            }
+        }
+
+        return dummy.next;
+    }
+}
+
+
+// Old
+public class Solution {
     public ListNode deleteDuplicates(ListNode head) {
         if (head == null) return head;
         ListNode top = new ListNode(0);
