@@ -1,58 +1,130 @@
-// Common Solution
+// HashMap Solution
 public class Solution {
     public RandomListNode copyRandomList(RandomListNode head) {
-        if (head == null) return head;
-        HashMap<RandomListNode, RandomListNode> map = new
-        HashMap<RandomListNode, RandomListNode>();
+        if (head == null) {
+            return head;
+        }
+        
+        HashMap<RandomListNode, RandomListNode> map = new HashMap<RandomListNode, RandomListNode>();
+        RandomListNode curr = head;
         RandomListNode newHead = new RandomListNode(head.label);
-        RandomListNode pre = newHead;
-        map.put(head, newHead);
-        RandomListNode node = head.next;
-        while (node != null) {
-            RandomListNode newNode = new RandomListNode(node.label);
-            map.put(node, newNode);
-            pre.next = newNode;
-            pre = newNode;
-            node = node.next;
+        map.put(curr, newHead);
+        
+        curr = curr.next;
+        while (curr != null) {
+            RandomListNode newNode = new RandomListNode(curr.label);
+            map.put(curr, newNode);
+            curr = curr.next;
         }
-        node = head;
-        pre = newHead;
-        while (node != null) {
-            pre.random = map.get(node.random);
-            pre = pre.next;
-            node = node.next;
+        
+        curr = head;
+        while (curr != null) {
+            RandomListNode node = map.get(curr);
+            node.next = map.get(curr.next);
+            node.random = map.get(curr.random);
+            curr = curr.next;
         }
+        
         return newHead;
+    }
+}
+
+// HashMap一次循环：
+public class Solution {
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if (head == null) {
+            return null;
+        }
+        
+        HashMap<RandomListNode, RandomListNode> map = new HashMap<>();
+        RandomListNode dummy = new RandomListNode(0);
+        RandomListNode tail = dummy;
+        RandomListNode newNode;
+        
+        while (head != null) {
+            if (map.containsKey(head)) {
+                newNode = map.get(head);
+            }
+            else {
+                newNode = new RandomListNode(head.label);
+                map.put(head, newNode);
+            }
+            tail.next = newNode;
+            
+            // 务必记得判断head.random != null, 否则空指针错误
+            if (head.random != null) {
+                if (map.containsKey(head.random)) {
+                    newNode.random = map.get(head.random);
+                }
+                else {
+                    newNode.random = new RandomListNode(head.random.label);
+                    map.put(head.random, newNode.random);
+                }
+            }
+            
+            tail = tail.next;
+            head = head.next;
+        }
+        
+        return dummy.next;
     }
 }
 // A soultion with O(1) extra space
 public class Solution {
-    public RandomListNode copyRandomList(RandomListNode head) {
-        if (head == null) return head;
-        RandomListNode iter = head;
-        while (iter != null) {
-            RandomListNode next = iter.next;
-            RandomListNode node = new RandomListNode(iter.label);
-            iter.next = node;
-            node.next = next;
-            iter = next;
+    private void copyNext(RandomListNode head) {
+        while (head != null) {
+            RandomListNode newNode = new RandomListNode(head.label);
+            RandomListNode temp = head.next;
+            head.next = newNode;
+            newNode.next = temp;
+            head = temp;
         }
-        iter = head;
-        while (iter != null) {
-            if (iter.random != null)
-                iter.next.random = iter.random.next;
-            iter = iter.next.next;
+    }
+    
+    private void copyRandom(RandomListNode head) {
+        while (head != null) {
+            if (head.random != null) {
+                head.next.random = head.random.next;
+            }
+            head = head.next.next;
         }
-        iter = head;
+    }
+    
+    // private RandomListNode split(RandomListNode head) {
+    //     RandomListNode dummy = new RandomListNode(0);
+    //     RandomListNode tail = dummy;
+        
+    //     while (head != null) {
+    //         tail.next = head.next;
+    //         head = head.next.next;
+    //         tail = tail.next;
+    //     }
+        
+    //     return dummy.next;
+    // }
+    // 重写了以上方法，只用一个空间
+    private RandomListNode split(RandomListNode head) {
         RandomListNode newHead = head.next;
-        while (iter != null) {
-          // 操作需要注意
-            RandomListNode next = iter.next;
-            iter.next = next.next;
-            if (next.next != null)
-                next.next = next.next.next;
-            iter = iter.next;
+        
+        while (head != null) {
+            RandomListNode temp = head.next;
+            head.next = temp.next;
+            head = head.next;
+            if (temp.next != null) {
+                temp.next = head.next;
+            }
         }
+        
         return newHead;
+    }
+    
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if (head == null) {
+            return null;
+        }
+        
+        copyNext(head);
+        copyRandom(head);
+        return split(head);
     }
 }
