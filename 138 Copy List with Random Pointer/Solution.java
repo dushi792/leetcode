@@ -7,10 +7,7 @@ public class Solution {
         
         HashMap<RandomListNode, RandomListNode> map = new HashMap<RandomListNode, RandomListNode>();
         RandomListNode curr = head;
-        RandomListNode newHead = new RandomListNode(head.label);
-        map.put(curr, newHead);
         
-        curr = curr.next;
         while (curr != null) {
             RandomListNode newNode = new RandomListNode(curr.label);
             map.put(curr, newNode);
@@ -25,11 +22,11 @@ public class Solution {
             curr = curr.next;
         }
         
-        return newHead;
+        return map.get(head);
     }
 }
 
-// HashMap一次循环：
+// HashMap一次循环（不推荐）：
 public class Solution {
     public RandomListNode copyRandomList(RandomListNode head) {
         if (head == null) {
